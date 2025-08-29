@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PhotoUploader from '../../components/PhotoUploader';
 import { photoStorage } from '../../utils/storage';
 import type { Photo } from '../../types/photo';
+import { hasApiKey, generateTryOn } from '../../utils/openrouter';
 
 interface TryOnFlowProps {
   selectedImageUrl: string | null;
@@ -15,6 +16,8 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
   const [defaultPhoto, setDefaultPhoto] = useState<Photo | null>(null);
   const [processingProgress, setProcessingProgress] = useState(0);
   const [resultImage, setResultImage] = useState<string | null>(null);
+  const [apiReady, setApiReady] = useState<boolean | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     initializeFlow();
@@ -23,15 +26,17 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
   const initializeFlow = async () => {
     try {
       setCurrentStep('loading');
-      
+      setErrorMsg(null);
+
       // 檢查是否有預設照片
       const photos = await photoStorage.getPhotos();
       const defaultPhotoData = photos.find(p => p.isDefault) || photos[0];
-      
+      setApiReady(await hasApiKey());
+
       if (defaultPhotoData) {
         setDefaultPhoto(defaultPhotoData);
         setCurrentStep('processing');
-        startProcessing();
+        startProcessing(defaultPhotoData);
       } else {
         setCurrentStep('no_photos');
       }
@@ -46,38 +51,61 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
       const newDefaultPhoto = photos.find(p => p.isDefault) || photos[0];
       setDefaultPhoto(newDefaultPhoto);
       setCurrentStep('processing');
-      startProcessing();
+      startProcessing(newDefaultPhoto);
     }
   };
 
-  const startProcessing = () => {
+  const startProcessing = (photoForProcessing?: Photo) => {
     setProcessingProgress(0);
+    setErrorMsg(null);
     
     // 模擬處理進度
     const progressInterval = setInterval(() => {
       setProcessingProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => {
-            showResult();
-          }, 500);
           return 100;
         }
         return prev + Math.random() * 15 + 5; // 隨機進度增加
       });
     }, 300);
+
+    // 觸發實際 API 處理（若使用者已設定 API Key 且有服裝圖片）
+    (async () => {
+      try {
+        const ready = await hasApiKey();
+        setApiReady(ready);
+        const person = (photoForProcessing || defaultPhoto);
+        const garment = selectedImageUrl;
+        if (!person || !garment) return;
+
+        if (!ready) {
+          // 無 API Key 時，使用示範結果，並在進度完成後才跳轉
+          setResultImage('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=face');
+          return;
+        }
+
+        const url = await generateTryOn(person.dataUrl, garment);
+        // 設定結果，等待進度完成後由 effect 切換畫面
+        setResultImage(url);
+      } catch (e: any) {
+        console.warn('Try-on API error:', e);
+        setErrorMsg(e?.message || '生成失敗，請稍後重試或檢查設定');
+      }
+    })();
   };
 
-  const showResult = () => {
-    // 這裡之後會替換成真正的 API 結果
-    // 目前使用預設的模擬結果圖片
-    setResultImage('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=face');
-    setCurrentStep('result');
-  };
+  // 當結果圖片已取得且進度完成，才跳轉到結果頁
+  useEffect(() => {
+    if (currentStep === 'processing' && resultImage && processingProgress >= 100) {
+      setCurrentStep('result');
+    }
+  }, [currentStep, resultImage, processingProgress]);
 
   const handleRetry = () => {
     setCurrentStep('processing');
     setProcessingProgress(0);
+    setResultImage(null);
     startProcessing();
   };
 
@@ -158,6 +186,29 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                 {processingProgress >= 60 && processingProgress < 90 && '正在生成試穿效果...'}
                 {processingProgress >= 90 && '即將完成...'}
               </p>
+
+              {apiReady === false && (
+                <div className="mt-4 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-3 py-2">
+                  尚未設定 OpenRouter API Key，將顯示示範結果圖。請在擴充 Popup 的「設定」頁籤填入金鑰以啟用真實生成。
+                </div>
+              )}
+
+              {errorMsg && (
+                <div className="mt-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
+                  {errorMsg}
+                </div>
+              )}
+
+              {errorMsg && (
+                <div className="mt-4">
+                  <button
+                    onClick={handleRetry}
+                    className="w-full bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+                  >
+                    重新嘗試生成
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         );
