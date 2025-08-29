@@ -28,7 +28,7 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
       setCurrentStep('loading');
       setErrorMsg(null);
 
-      // 檢查是否有預設照片
+      // Check for default photo
       const photos = await photoStorage.getPhotos();
       const defaultPhotoData = photos.find(p => p.isDefault) || photos[0];
       setApiReady(await hasApiKey());
@@ -59,18 +59,18 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
     setProcessingProgress(0);
     setErrorMsg(null);
     
-    // 模擬處理進度
+    // Simulate processing progress
     const progressInterval = setInterval(() => {
       setProcessingProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }
-        return prev + Math.random() * 15 + 5; // 隨機進度增加
+        return prev + Math.random() * 15 + 5; // Random progress increment
       });
     }, 300);
 
-    // 觸發實際 API 處理（若使用者已設定 API Key 且有服裝圖片）
+    // Trigger actual API processing (if user has set API Key and has garment image)
     (async () => {
       try {
         const ready = await hasApiKey();
@@ -80,22 +80,22 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
         if (!person || !garment) return;
 
         if (!ready) {
-          // 無 API Key 時，使用示範結果，並在進度完成後才跳轉
+          // When no API Key, use demo result and wait for progress completion
           setResultImage('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=face');
           return;
         }
 
         const url = await generateTryOn(person.dataUrl, garment);
-        // 設定結果，等待進度完成後由 effect 切換畫面
+        // Set result, wait for progress completion to switch screen
         setResultImage(url);
       } catch (e: any) {
         console.warn('Try-on API error:', e);
-        setErrorMsg(e?.message || '生成失敗，請稍後重試或檢查設定');
+        setErrorMsg(e?.message || 'Generation failed. Please try again later or check your settings.');
       }
     })();
   };
 
-  // 當結果圖片已取得且進度完成，才跳轉到結果頁
+  // When result image is obtained and progress is complete, switch to result page
   useEffect(() => {
     if (currentStep === 'processing' && resultImage && processingProgress >= 100) {
       setCurrentStep('result');
@@ -121,8 +121,8 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">準備虛擬試穿</h2>
-            <p className="text-gray-600">正在檢查您的標準照片...</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Preparing Virtual Try-On</h2>
+            <p className="text-gray-600">Checking your standard photo...</p>
           </div>
         );
 
@@ -135,8 +135,8 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">需要您的標準照片</h2>
-              <p className="text-gray-600">請先上傳一張您的標準照片來進行虛擬試穿</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Your standard photo is needed</h2>
+              <p className="text-gray-600">Please upload a standard photo to start the try-on</p>
             </div>
             
             <PhotoUploader onUploadSuccess={handleUploadSuccess} />
@@ -146,7 +146,7 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                 onClick={handleClose}
                 className="text-gray-500 hover:text-gray-700 text-sm"
               >
-                取消
+                Cancel
               </button>
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
       case 'upload':
         return (
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">上傳標準照片</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Upload Standard Photo</h2>
             <PhotoUploader onUploadSuccess={handleUploadSuccess} />
           </div>
         );
@@ -170,8 +170,8 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                 </svg>
               </div>
               
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">AI 正在生成試穿效果</h2>
-              <p className="text-gray-600 mb-6">請稍候，這可能需要幾秒鐘時間...</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">AI is generating the try-on</h2>
+              <p className="text-gray-600 mb-6">Please wait. This may take a few seconds...</p>
               
               <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                 <div 
@@ -181,15 +181,15 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
               </div>
               
               <p className="text-sm text-gray-500">
-                {processingProgress < 30 && '正在分析服裝特徵...'}
-                {processingProgress >= 30 && processingProgress < 60 && '正在匹配您的身型...'}
-                {processingProgress >= 60 && processingProgress < 90 && '正在生成試穿效果...'}
-                {processingProgress >= 90 && '即將完成...'}
+                {processingProgress < 30 && 'Analyzing garment features...'}
+                {processingProgress >= 30 && processingProgress < 60 && 'Matching your body shape...'}
+                {processingProgress >= 60 && processingProgress < 90 && 'Generating try-on...'}
+                {processingProgress >= 90 && 'Almost done...'}
               </p>
 
               {apiReady === false && (
                 <div className="mt-4 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-3 py-2">
-                  尚未設定 OpenRouter API Key，將顯示示範結果圖。請在擴充 Popup 的「設定」頁籤填入金鑰以啟用真實生成。
+                  No OpenRouter API Key set. Showing a sample result. Add a key in the extension popup Settings to enable real generation.
                 </div>
               )}
 
@@ -205,7 +205,7 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                     onClick={handleRetry}
                     className="w-full bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
                   >
-                    重新嘗試生成
+                    Retry Generation
                   </button>
                 </div>
               )}
@@ -217,53 +217,53 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
         return (
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl w-full mx-4">
             <div className="p-6 bg-blue-600">
-              <h2 className="text-2xl font-bold text-white text-center">✨ 虛擬試穿結果</h2>
+              <h2 className="text-2xl font-bold text-white text-center">✨ Try-On Result</h2>
             </div>
             
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* 原始服裝圖片 */}
+                {/* Original garment image */}
                 <div className="space-y-2">
-                  <h3 className="font-medium text-gray-900">選擇的服裝</h3>
+                  <h3 className="font-medium text-gray-900">Selected Garment</h3>
                   <div className="aspect-square rounded-lg overflow-hidden border border-gray-200">
                     <img
                       src={selectedImageUrl || 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=300&h=300&fit=crop'}
-                      alt="選擇的服裝"
+                      alt="Selected garment"
                       className="w-full h-full object-cover"
                     />
                   </div>
                   {sourcePageUrl && (
                     <p className="text-xs text-gray-500 truncate">
-                      來源：{new URL(sourcePageUrl).hostname}
+                      Source: {new URL(sourcePageUrl).hostname}
                     </p>
                   )}
                 </div>
                 
-                {/* 試穿結果 */}
+                {/* Try-on result */}
                 <div className="space-y-2">
-                  <h3 className="font-medium text-gray-900">試穿效果</h3>
+                  <h3 className="font-medium text-gray-900">Try-On Result</h3>
                   <div className="aspect-square rounded-lg overflow-hidden border border-gray-200 relative">
                     <img
                       src={resultImage || ''}
-                      alt="試穿結果"
+                      alt="Try-on result"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2">
                       <span className="px-2 py-1 bg-cyan-500 text-white text-xs rounded-full">
-                        AI 生成
+                        AI Generated
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              {/* 操作按鈕 */}
+              {/* Action buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleRetry}
                   className="flex-1 bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-200"
                 >
-                  🔄 重新生成
+                  🔄 Regenerate
                 </button>
                 
                 <button
@@ -275,14 +275,14 @@ export default function TryOnFlow({ selectedImageUrl, sourcePageUrl }: TryOnFlow
                   }}
                   className="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-200 transition-all duration-200"
                 >
-                  💾 儲存圖片
+                  💾 Save Image
                 </button>
                 
                 <button
                   onClick={handleClose}
                   className="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-50 transition-all duration-200"
                 >
-                  ✅ 完成
+                  ✅ Done
                 </button>
               </div>
             </div>

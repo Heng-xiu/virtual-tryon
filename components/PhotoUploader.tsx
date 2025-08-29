@@ -31,14 +31,14 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setIsUploading(true);
-    setUploadProgress('正在處理圖片...');
+    setUploadProgress('Processing images...');
     
     try {
       const uploadedPhotos: Photo[] = [];
       
       for (let i = 0; i < acceptedFiles.length; i++) {
         const file = acceptedFiles[i];
-        setUploadProgress(`正在處理圖片 ${i + 1}/${acceptedFiles.length}: ${file.name}`);
+        setUploadProgress(`Processing image ${i + 1}/${acceptedFiles.length}: ${file.name}`);
         
         const validationError = validateImageFile(file);
         if (validationError) {
@@ -65,8 +65,8 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
           await photoStorage.savePhoto(photo);
           uploadedPhotos.push(photo);
         } catch (error) {
-          console.error('處理圖片時發生錯誤:', error);
-          onUploadError?.(`處理 ${file.name} 時發生錯誤`);
+          console.error('Error processing image:', error);
+          onUploadError?.(`Error processing ${file.name}`);
         }
       }
 
@@ -74,8 +74,8 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
         onUploadSuccess?.(uploadedPhotos);
       }
     } catch (error) {
-      console.error('上傳過程發生錯誤:', error);
-      onUploadError?.('上傳過程發生錯誤');
+      console.error('An error occurred during upload:', error);
+      onUploadError?.('An error occurred during upload');
     } finally {
       setIsUploading(false);
       setUploadProgress('');
@@ -126,7 +126,7 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
           <div className="text-gray-600">
             {isUploading ? (
               <div className="space-y-2">
-                <div className="text-sm font-medium text-blue-600">上傳中...</div>
+                <div className="text-sm font-medium text-blue-600">Uploading...</div>
                 <div className="text-xs text-gray-500">{uploadProgress}</div>
               </div>
             ) : isDragActive ? (
@@ -136,9 +136,9 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                     </svg>
-                    檔案需要處理
+                    File requires processing
                   </div>
-                  <div className="text-sm mt-1">圖片會自動調整或請檢查格式</div>
+                  <div className="text-sm mt-1">Images will be adjusted automatically or check the format</div>
                 </div>
               ) : (
                 <div className="text-blue-600">
@@ -146,15 +146,15 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4" />
                     </svg>
-                    放開以上傳圖片
+                    Drop to upload images
                   </div>
                 </div>
               )
             ) : (
               <div>
-                <div className="font-medium">拖放圖片到此處或點擊上傳</div>
+                <div className="font-medium">Drag & drop images here or click to upload</div>
                 <div className="text-sm text-gray-500 mt-1">
-                  支援 JPEG、PNG、WebP 格式，單檔最大 2MB
+                  Supports JPEG, PNG, WebP formats. Max 2MB per file
                 </div>
               </div>
             )}
@@ -169,12 +169,12 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            正在處理圖片...
+            Processing images...
           </div>
         </div>
       )}
 
-      {/* 詳細錯誤提示 */}
+      {/* Detailed error messages */}
       {fileErrors.length > 0 && (
         <div className="mt-4 space-y-3">
           {fileErrors.map((error, index) => (
@@ -206,7 +206,7 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
                     </span>
                     {error.type === 'SIZE_EXCEEDED' && error.actualSize && error.maxSize && (
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                        {formatFileSize(error.actualSize)} → 限制 {formatFileSize(error.maxSize)}
+                        {formatFileSize(error.actualSize)} → Limit {formatFileSize(error.maxSize)}
                       </span>
                     )}
                   </div>
@@ -226,7 +226,7 @@ export default function PhotoUploader({ onUploadSuccess, onUploadError }: PhotoU
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      重新拖放此檔案將自動壓縮
+                      Re-drop this file to auto-compress
                     </div>
                   )}
                 </div>

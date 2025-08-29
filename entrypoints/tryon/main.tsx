@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import TryOnFlow from './TryOnFlow';
 import '../popup/style.css';
 
-// 獲取 URL 參數
+// Get URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const imageUrl = urlParams.get('imageUrl');
 const pageUrl = urlParams.get('pageUrl');

@@ -12,11 +12,11 @@ import type { FileError } from '../types/photo';
 
 export function validateImageFile(file: File): string | null {
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    return '只支援 JPEG、PNG 和 WebP 格式的圖片';
+    return 'Only JPEG, PNG, and WebP images are supported.';
   }
   
   if (file.size > MAX_IMAGE_SIZE) {
-    return '圖片大小不能超過 2MB';
+    return 'Image size must not exceed 2MB.';
   }
   
   return null;
@@ -26,8 +26,8 @@ export function getFileErrorDetails(file: File): FileError | null {
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
     return {
       type: 'INVALID_FORMAT',
-      message: `不支援 ${file.type || '此檔案'} 格式`,
-      suggestion: '請使用 JPEG、PNG 或 WebP 格式的圖片',
+      message: `Unsupported format: ${file.type || 'this file'}`,
+      suggestion: 'Please use JPEG, PNG, or WebP images',
       file,
       supportedFormats: ['JPEG', 'PNG', 'WebP']
     };
@@ -36,8 +36,8 @@ export function getFileErrorDetails(file: File): FileError | null {
   if (file.size > MAX_IMAGE_SIZE) {
     return {
       type: 'SIZE_EXCEEDED',
-      message: `檔案大小超過限制`,
-      suggestion: '圖片會自動壓縮到合適大小，品質稍微降低但保持清晰',
+      message: 'File size exceeds the limit',
+      suggestion: 'Image will be automatically compressed to an appropriate size; quality slightly reduced but remains clear',
       file,
       actualSize: file.size,
       maxSize: MAX_IMAGE_SIZE
@@ -75,7 +75,7 @@ export function compressImage(
     const ctx = canvas.getContext('2d');
     
     if (!ctx) {
-      reject(new Error('無法建立 Canvas 上下文'));
+      reject(new Error('Failed to create canvas context'));
       return;
     }
     
@@ -101,7 +101,7 @@ export function compressImage(
     };
     
     img.onerror = () => {
-      reject(new Error('無法載入圖片'));
+      reject(new Error('Failed to load image'));
     };
     
     img.src = URL.createObjectURL(file);
@@ -115,11 +115,11 @@ export function fileToDataUrl(file: File): Promise<string> {
       if (e.target?.result) {
         resolve(e.target.result as string);
       } else {
-        reject(new Error('無法讀取檔案'));
+        reject(new Error('Failed to read file'));
       }
     };
     reader.onerror = () => {
-      reject(new Error('讀取檔案時發生錯誤'));
+      reject(new Error('An error occurred while reading the file'));
     };
     reader.readAsDataURL(file);
   });
@@ -132,7 +132,7 @@ export function getImageDimensions(dataUrl: string): Promise<{ width: number; he
       resolve({ width: img.width, height: img.height });
     };
     img.onerror = () => {
-      reject(new Error('無法獲取圖片尺寸'));
+      reject(new Error('Failed to get image dimensions'));
     };
     img.src = dataUrl;
   });

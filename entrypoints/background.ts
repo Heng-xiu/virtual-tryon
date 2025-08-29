@@ -26,7 +26,7 @@ export default defineBackground(() => {
   chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
       id: CONTEXT_MENU_ID,
-      title: '🪄 虛擬試穿',
+      title: '🪄 Virtual Try-On',
       contexts: ['image'],
       documentUrlPatterns: ALLOWED_SHOPPING_SITES
     });

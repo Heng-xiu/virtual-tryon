@@ -20,7 +20,7 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
       const storedPhotos = await photoStorage.getPhotos();
       setPhotos(storedPhotos.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
-      console.error('載入照片失敗:', error);
+      console.error('Failed to load photos:', error);
     } finally {
       setLoading(false);
     }
@@ -31,15 +31,15 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
   }, []);
 
   const handleDeletePhoto = async (photoId: string) => {
-    if (!confirm('確定要刪除這張照片嗎？')) return;
+    if (!confirm('Delete this photo?')) return;
     
     try {
       await photoStorage.deletePhoto(photoId);
       await loadPhotos();
       onRefresh?.();
     } catch (error) {
-      console.error('刪除照片失敗:', error);
-      alert('刪除照片失敗，請稍後再試');
+      console.error('Failed to delete photo:', error);
+      alert('Failed to delete photo. Please try again later.');
     }
   };
 
@@ -49,8 +49,8 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
       await loadPhotos();
       onRefresh?.();
     } catch (error) {
-      console.error('設定預設照片失敗:', error);
-      alert('設定預設照片失敗，請稍後再試');
+      console.error('Failed to set default photo:', error);
+      alert('Failed to set default photo. Please try again later.');
     }
   };
 
@@ -61,12 +61,12 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8" role="status" aria-label="載入照片中">
+      <div className="flex items-center justify-center py-8" role="status" aria-label="Loading photos">
         <div 
           className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
           aria-hidden="true"
         ></div>
-        <span className="sr-only">載入照片中...</span>
+        <span className="sr-only">Loading photos...</span>
       </div>
     );
   }
@@ -89,8 +89,8 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
             />
           </svg>
         </div>
-        <p className="text-gray-500">還沒有上傳任何照片</p>
-        <p className="text-sm text-gray-400 mt-1">請先上傳你的標準照片</p>
+        <p className="text-gray-500">No photos uploaded yet</p>
+        <p className="text-sm text-gray-400 mt-1">Please upload a standard photo first</p>
       </div>
     );
   }
@@ -99,17 +99,17 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
     <>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-gray-900">已上傳的照片 ({photos.length})</h3>
+          <h3 className="font-medium text-gray-900">Uploaded Photos ({photos.length})</h3>
           <button
             onClick={loadPhotos}
             className="text-sm text-blue-600 hover:text-blue-700"
-            aria-label="重新載入照片清單"
+            aria-label="Reload photo list"
           >
-            重新載入
+            Reload
           </button>
         </div>
         
-        <div className="grid grid-cols-2 gap-3" role="list" aria-label="照片清單">
+        <div className="grid grid-cols-2 gap-3" role="list" aria-label="Photo list">
           {photos.map((photo) => (
             <div
               key={photo.id}
@@ -127,11 +127,11 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
                     handlePreviewPhoto(photo);
                   }
                 }}
-                aria-label={`預覽照片: ${photo.name}`}
+                aria-label={`Preview photo: ${photo.name}`}
               >
                 <img
                   src={photo.dataUrl}
-                  alt={`照片: ${photo.name}${photo.isDefault ? ' (預設照片)' : ''}`}
+                  alt={`Photo: ${photo.name}${photo.isDefault ? ' (Default)' : ''}`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -141,20 +141,20 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
                   <span 
                     className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
                     role="status"
-                    aria-label="預設照片標記"
+                    aria-label="Default photo badge"
                   >
-                    預設
+                    Default
                   </span>
                 </div>
               )}
               
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="flex space-x-1" role="group" aria-label="照片操作">
+                <div className="flex space-x-1" role="group" aria-label="Photo actions">
                   {!photo.isDefault && (
                     <button
                       onClick={() => handleSetDefault(photo.id)}
                       className="p-1 bg-white rounded-full shadow-md hover:bg-gray-50"
-                      aria-label={`設定 ${photo.name} 為預設照片`}
+                      aria-label={`Set ${photo.name} as default`}
                     >
                       <svg 
                         className="w-4 h-4 text-gray-600" 
@@ -170,7 +170,7 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
                   <button
                     onClick={() => handleDeletePhoto(photo.id)}
                     className="p-1 bg-white rounded-full shadow-md hover:bg-red-50"
-                    aria-label={`刪除照片 ${photo.name}`}
+                    aria-label={`Delete photo ${photo.name}`}
                   >
                     <svg 
                       className="w-4 h-4 text-red-600" 
@@ -191,7 +191,7 @@ export default function PhotoGallery({ onRefresh }: PhotoGalleryProps) {
                 </div>
                 <div className="text-xs text-gray-500 mt-1 flex justify-between">
                   <span>{formatFileSize(photo.size)}</span>
-                  <span>{new Date(photo.timestamp).toLocaleDateString('zh-TW')}</span>
+                  <span>{new Date(photo.timestamp).toLocaleDateString('en-US')}</span>
                 </div>
               </div>
             </div>

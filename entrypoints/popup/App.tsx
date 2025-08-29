@@ -15,7 +15,7 @@ function App() {
   const handleUploadSuccess = useCallback((photos: Photo[]) => {
     setMessage({
       type: 'success',
-      text: `成功上傳 ${photos.length} 張照片！`
+      text: `Uploaded ${photos.length} photos successfully!`
     });
     setRefreshGallery(prev => prev + 1);
     setTimeout(() => setMessage(null), 3000);
@@ -39,7 +39,7 @@ function App() {
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
           <h1 className="text-xl font-semibold text-gray-900">Virtual Try-On</h1>
-          <p className="text-sm text-gray-600 mt-1">虛擬試穿助手</p>
+          <p className="text-sm text-gray-600 mt-1">Virtual Try-On Assistant</p>
         </div>
 
         {/* Tabs */}
@@ -52,7 +52,7 @@ function App() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            上傳照片
+            Upload
           </button>
           <button
             onClick={() => setActiveTab('gallery')}
@@ -62,7 +62,7 @@ function App() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            照片管理
+            Gallery
           </button>
           <button
             onClick={() => setActiveTab('settings')}
@@ -72,7 +72,7 @@ function App() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            設定
+            Settings
           </button>
         </div>
 

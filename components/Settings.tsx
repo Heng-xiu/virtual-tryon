@@ -31,14 +31,14 @@ export default function Settings() {
     try {
       setStatus({ type: 'idle' });
       if (!apiKey.trim()) {
-        setStatus({ type: 'error', msg: '請輸入 API Key' });
+        setStatus({ type: 'error', msg: 'Please enter API Key' });
         return;
       }
       await Promise.all([setApiKey(apiKey.trim()), setBaseUrl(baseUrl.trim()), setModel(model.trim())]);
-      setStatus({ type: 'success', msg: '已儲存設定' });
+      setStatus({ type: 'success', msg: 'Settings saved' });
       setTimeout(() => setStatus({ type: 'idle' }), 3000);
     } catch (e) {
-      setStatus({ type: 'error', msg: '儲存失敗，請再試一次' });
+      setStatus({ type: 'error', msg: 'Save failed. Please try again.' });
     }
   };
 
@@ -48,16 +48,16 @@ export default function Settings() {
     try {
       const data = await listModels();
       const count = Array.isArray(data?.data) ? data.data.length : (data?.models?.length || 0);
-      setStatus({ type: 'success', msg: `連線成功，模型數：${count}` });
+      setStatus({ type: 'success', msg: `Connected successfully. Models: ${count}` });
     } catch (e: any) {
-      setStatus({ type: 'error', msg: `連線失敗：${e?.message || '未知錯誤'}` });
+      setStatus({ type: 'error', msg: `Connection failed: ${e?.message || 'Unknown error'}` });
     } finally {
       setLoading(false);
     }
   };
 
   const handleClearAllData = async () => {
-    if (!confirm('確定要清除所有照片和 API 金鑰嗎？此操作無法復原。')) {
+    if (!confirm('Clear all photos and API key? This cannot be undone.')) {
       return;
     }
 
@@ -76,10 +76,10 @@ export default function Settings() {
       setModelState('google/gemini-2.5-flash-image-preview:free');
       setStorageUsage({ used: 0, quota: storageUsage.quota, percentage: 0 });
       
-      setStatus({ type: 'success', msg: '已清除所有資料' });
+      setStatus({ type: 'success', msg: 'All data cleared' });
       setTimeout(() => setStatus({ type: 'idle' }), 3000);
     } catch (e: any) {
-      setStatus({ type: 'error', msg: `清除失敗：${e?.message || '未知錯誤'}` });
+      setStatus({ type: 'error', msg: `Failed to clear data: ${e?.message || 'Unknown error'}` });
     } finally {
       setClearingData(false);
     }
@@ -96,8 +96,8 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">OpenRouter 設定（BYO Key）</h2>
-        <p className="text-sm text-gray-600 mt-1">你的金鑰只會儲存在本機的擴充儲存中。</p>
+        <h2 className="text-lg font-semibold text-gray-900">OpenRouter Settings (BYO Key)</h2>
+        <p className="text-sm text-gray-600 mt-1">Your key is stored locally in extension storage.</p>
       </div>
 
       <div className="space-y-4">
@@ -115,7 +115,7 @@ export default function Settings() {
               onClick={() => setMasked((m) => !m)}
               className="px-3 py-2 border rounded-md text-sm bg-gray-50 hover:bg-gray-100"
             >
-              {masked ? '顯示' : '隱藏'}
+              {masked ? 'Show' : 'Hide'}
             </button>
           </div>
         </div>
@@ -128,11 +128,11 @@ export default function Settings() {
             onChange={(e) => setBaseUrlState(e.target.value)}
             className="mt-1 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <p className="text-xs text-gray-500 mt-1">預設： https://openrouter.ai/api</p>
+          <p className="text-xs text-gray-500 mt-1">Default: https://openrouter.ai/api</p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">模型 ID</label>
+          <label className="block text-sm font-medium text-gray-700">Model ID</label>
           <input
             type="text"
             value={model}
@@ -140,7 +140,7 @@ export default function Settings() {
             className="mt-1 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <p className="text-xs text-gray-500 mt-1">
-            範例：google/gemini-2.5-flash-image-preview（或加 :free）。多模態可吃 image_url。
+            Example: google/gemini-2.5-flash-image-preview (or add :free). Multimodal supports image_url.
           </p>
         </div>
 
@@ -149,14 +149,14 @@ export default function Settings() {
             onClick={handleSave}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            儲存設定
+            Save Settings
           </button>
           <button
             onClick={handleTest}
             disabled={loading}
             className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 disabled:opacity-50"
           >
-            {loading ? '測試中…' : '測試連線'}
+            {loading ? 'Testing...' : 'Test Connection'}
           </button>
         </div>
 
@@ -173,12 +173,12 @@ export default function Settings() {
         )}
 
         <div className="border-t pt-4 mt-6">
-          <h3 className="text-md font-medium text-gray-900 mb-3">儲存空間與隱私</h3>
+          <h3 className="text-md font-medium text-gray-900 mb-3">Storage & Privacy</h3>
           
           <div className="space-y-3">
             <div className="bg-gray-50 p-3 rounded-md">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">已使用空間</span>
+                <span className="text-sm font-medium text-gray-700">Storage used</span>
                 <span className="text-sm text-gray-600">
                   {formatBytes(storageUsage.used)} / {formatBytes(storageUsage.quota)}
                 </span>
@@ -196,7 +196,7 @@ export default function Settings() {
                 ></div>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {storageUsage.percentage}% 已使用
+                {storageUsage.percentage}% used
               </p>
             </div>
 
@@ -204,19 +204,19 @@ export default function Settings() {
               onClick={handleClearAllData}
               disabled={clearingData}
               className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="清除所有照片和 API 金鑰"
+              aria-label="Clear all photos and API key"
             >
-              {clearingData ? '清除中...' : '清除所有照片與金鑰'}
+              {clearingData ? 'Clearing...' : 'Clear All Photos & Key'}
             </button>
             
             <p className="text-xs text-gray-500">
-              此操作會清除所有已上傳的照片和 API 設定，釋放本機儲存空間。
+              This will clear all uploaded photos and API settings, freeing up local storage space.
             </p>
           </div>
         </div>
 
         <div className="text-xs text-gray-500">
-          小提醒：若遇到 429（Too Many Requests），可改用非免費模型、降低請求次數，或稍後再試。
+          Tip: If you encounter 429 (Too Many Requests), try using a non-free model, reduce request frequency, or try again later.
         </div>
       </div>
     </div>
