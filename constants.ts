@@ -1,0 +1,43 @@
+// Context menu constants
+export const CONTEXT_MENU_ID = 'virtual-tryon-menu';
+
+// Whitelisted shopping sites for minimal permissions
+export const ALLOWED_SHOPPING_SITES = [
+  'https://*.amazon.com/*',
+  'https://*.amazon.co.uk/*',
+  'https://*.amazon.de/*',
+  'https://*.amazon.fr/*',
+  'https://*.amazon.it/*',
+  'https://*.amazon.es/*',
+  'https://*.amazon.ca/*',
+  'https://*.amazon.au/*',
+  'https://*.amazon.co.jp/*',
+  'https://*.shopee.tw/*',
+  'https://*.shopee.com/*',
+  'https://*.momo.com.tw/*',
+  'https://*.pchome.com.tw/*',
+  'https://*.taobao.com/*',
+  'https://*.tmall.com/*',
+  'https://*.alibaba.com/*',
+  'https://*.zalando.com/*',
+  'https://*.zalando.co.uk/*',
+  'https://*.zalando.de/*',
+  'https://*.zalando.fr/*',
+  'https://*.zalando.it/*',
+  'https://*.zalando.es/*',
+  'https://*.zara.com/*',
+  'https://*.hm.com/*',
+  'https://*.uniqlo.com/*',
+  'https://*.nike.com/*',
+  'https://*.adidas.com/*',
+  'https://*.shopify.com/*',
+  'https://*.etsy.com/*',
+  'https://*.ebay.com/*',
+  'https://*.ebay.co.uk/*',
+  'https://*.ebay.de/*',
+  'https://*.walmart.com/*',
+  'https://*.target.com/*',
+  'https://*.bestbuy.com/*',
+  'https://*.macys.com/*',
+  'https://*.nordstrom.com/*'
+];

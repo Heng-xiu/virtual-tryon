@@ -1,4 +1,21 @@
 import { defineConfig } from 'wxt';
+import { ALLOWED_SHOPPING_SITES } from './constants';
+
+// Detect development mode
+const isDev = process.env.NODE_ENV === 'development' || process.env.COMMAND === 'serve';
+
+// Content Security Policy - more permissive in development for hot reload
+const getCSP = () => {
+  const baseCSP = "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+  
+  if (isDev) {
+    // Allow WebSocket connections to localhost for development server
+    return `${baseCSP} connect-src 'self' https://openrouter.ai ws://localhost:* http://localhost:*;`;
+  } else {
+    // Strict policy for production
+    return `${baseCSP} connect-src 'self' https://openrouter.ai;`;
+  }
+};
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -11,7 +28,10 @@ export default defineConfig({
       'contextMenus',
       'activeTab',
     ],
-    host_permissions: ['<all_urls>'],
+    host_permissions: ALLOWED_SHOPPING_SITES,
+    content_security_policy: {
+      extension_pages: getCSP()
+    },
     icons: {
       16: 'icon/16.png',
       32: 'icon/32.png',

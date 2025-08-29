@@ -1,3 +1,5 @@
+import type { ChatCompletionRequest, ChatCompletionResponse, ApiError } from '../types/messages';
+
 const STORAGE_KEYS = {
   apiKey: 'openrouter_api_key',
   baseUrl: 'openrouter_base_url',
@@ -7,6 +9,18 @@ const STORAGE_KEYS = {
 const DEFAULTS = {
   baseUrl: 'https://openrouter.ai/api',
   model: 'google/gemini-2.5-flash-image-preview:free',
+  timeout: 30000, // 30 seconds
+} as const;
+
+// Error message mappings for better user experience
+const ERROR_MESSAGES = {
+  401: 'API key is invalid or missing. Please check your OpenRouter API key.',
+  403: 'Access forbidden. Your API key may not have permission for this model.',
+  429: 'Rate limit exceeded. Please wait a moment and try again.',
+  500: 'Server error. Please try again later.',
+  502: 'Bad gateway. The service may be temporarily unavailable.',
+  503: 'Service unavailable. Please try again later.',
+  504: 'Request timeout. Please try again.',
 } as const;
 
 type Json = Record<string, any>;
@@ -66,6 +80,38 @@ export async function hasApiKey(): Promise<boolean> {
   return !!(k && k.trim());
 }
 
+export async function clearApiKey(): Promise<void> {
+  if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+    await chrome.storage.local.remove([
+      STORAGE_KEYS.apiKey,
+      STORAGE_KEYS.baseUrl,
+      STORAGE_KEYS.model,
+    ]);
+    return;
+  }
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem(STORAGE_KEYS.apiKey);
+    localStorage.removeItem(STORAGE_KEYS.baseUrl);
+    localStorage.removeItem(STORAGE_KEYS.model);
+  }
+}
+
+function getErrorMessage(status: number): string {
+  const message = ERROR_MESSAGES[status as keyof typeof ERROR_MESSAGES];
+  if (message) return message;
+  
+  if (status >= 500) return 'Server error. Please try again later.';
+  if (status >= 400) return 'Request error. Please check your settings.';
+  
+  return `Unexpected error (${status}). Please try again.`;
+}
+
+function createAbortController(timeoutMs: number = DEFAULTS.timeout): AbortController {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), timeoutMs);
+  return controller;
+}
+
 function buildHeaders(apiKey: string): HeadersInit {
   const title = 'Virtual Try-On Extension';
   let referer = 'https://virtual-tryon.local';
@@ -92,18 +138,31 @@ function joinUrl(base: string, path: string): string {
 
 export async function listModels(): Promise<Json> {
   const [apiKey, baseUrl] = await Promise.all([getApiKey(), getBaseUrl()]);
-  if (!apiKey) throw new Error('缺少 API Key');
+  if (!apiKey) throw new Error('Missing API Key');
 
+  const controller = createAbortController();
   const url = joinUrl(baseUrl, '/v1/models');
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: buildHeaders(apiKey),
-  });
-  if (!res.ok) {
-    const body = await safeJson(res);
-    throw new Error(body?.error?.message || `列出模型失敗: ${res.status}`);
+  
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: buildHeaders(apiKey),
+      signal: controller.signal,
+    });
+    
+    if (!res.ok) {
+      const body = await safeJson(res);
+      const errorMessage = body?.error?.message || getErrorMessage(res.status);
+      throw new Error(errorMessage);
+    }
+    
+    return res.json();
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timed out. Please try again.');
+    }
+    throw error;
   }
-  return res.json();
 }
 
 function extractFromText(text: string): string | null {
@@ -122,27 +181,57 @@ function extractFromText(text: string): string | null {
 function extractImageFromContent(content: any): string | null {
   if (!content) return null;
 
-  if (typeof content === 'string') {
-    return extractFromText(content);
-  }
-
+  // Handle structured content (array format)
   if (Array.isArray(content)) {
     for (const part of content) {
-      if (part?.type === 'image_url' && part?.image_url?.url) return part.image_url.url;
+      // Check for structured image_url objects
+      if (part?.type === 'image_url' && part?.image_url?.url) {
+        return part.image_url.url;
+      }
+      
+      // Check for text content with embedded URLs
       if (part?.type === 'text' && typeof part.text === 'string') {
         const found = extractFromText(part.text);
         if (found) return found;
       }
+      
+      // Handle direct string parts
       if (typeof part === 'string') {
         const found = extractFromText(part);
         if (found) return found;
       }
+      
+      // Handle nested objects
+      if (typeof part === 'object' && part !== null) {
+        const nested = extractImageFromContent(part);
+        if (nested) return nested;
+      }
     }
   }
 
-  if (typeof content === 'object') {
-    if (content?.image_url?.url) return content.image_url.url;
+  // Handle object format
+  if (typeof content === 'object' && content !== null) {
+    // Direct image_url property
+    if (content.image_url?.url) return content.image_url.url;
+    
+    // Check for url property directly
+    if (typeof content.url === 'string') {
+      const found = extractFromText(content.url);
+      if (found) return found;
+    }
+    
+    // Recursively check object properties
+    for (const value of Object.values(content)) {
+      const found = extractImageFromContent(value);
+      if (found) return found;
+    }
   }
+
+  // Handle string content (fallback to text extraction)
+  if (typeof content === 'string') {
+    return extractFromText(content);
+  }
+
   return null;
 }
 
@@ -160,10 +249,12 @@ export async function generateTryOn(personDataUrl: string, garmentImageUrl: stri
     getBaseUrl(),
     getModel(),
   ]);
-  if (!apiKey) throw new Error('缺少 API Key');
-  if (!personDataUrl) throw new Error('缺少人物圖片');
-  if (!garmentImageUrl) throw new Error('缺少服裝圖片');
+  
+  if (!apiKey) throw new Error('Missing API Key');
+  if (!personDataUrl) throw new Error('Missing person image');
+  if (!garmentImageUrl) throw new Error('Missing garment image');
 
+  const controller = createAbortController();
   const url = joinUrl(baseUrl, '/v1/chat/completions');
 
   const systemPrompt = [
@@ -174,7 +265,7 @@ export async function generateTryOn(personDataUrl: string, garmentImageUrl: stri
     'Do not include markdown, code fences, or any extra text.',
   ].join(' ');
 
-  const body = {
+  const body: ChatCompletionRequest = {
     model,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -190,29 +281,41 @@ export async function generateTryOn(personDataUrl: string, garmentImageUrl: stri
         ],
       },
     ],
-    stream: false,
-  } as const;
+    max_tokens: 4000,
+    temperature: 0.7,
+  };
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: buildHeaders(apiKey),
-    body: JSON.stringify(body),
-  });
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: buildHeaders(apiKey),
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
 
-  const data = await safeJson(res);
-  if (!res.ok) {
-    const msg = data?.error?.message || `生成失敗: ${res.status}`;
-    throw new Error(msg);
+    const data = await safeJson(res);
+    if (!res.ok) {
+      const errorMessage = data?.error?.message || getErrorMessage(res.status);
+      throw new Error(errorMessage);
+    }
+
+    // Extract image from response with improved logic
+    const choice = data?.choices?.[0];
+    const content = choice?.message?.content ?? choice?.message;
+    const extracted = extractImageFromContent(content);
+    if (extracted) return extracted;
+
+    // Fallback: search entire response for image URLs
+    const fallbackExtracted = extractFromText(JSON.stringify(data));
+    if (fallbackExtracted) return fallbackExtracted;
+
+    throw new Error('No image found in response. Please try again.');
+    
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timed out. Please try again.');
+    }
+    throw error;
   }
-
-  const choice = data?.choices?.[0];
-  const content = choice?.message?.content ?? choice?.message;
-  const extracted = extractImageFromContent(content);
-  if (extracted) return extracted;
-
-  const alt = extractFromText(JSON.stringify(data));
-  if (alt) return alt;
-
-  throw new Error('回應中找不到圖片或資料網址');
 }
 

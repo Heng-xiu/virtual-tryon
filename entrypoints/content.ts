@@ -1,40 +1,57 @@
-export default defineContentScript({
-  matches: ['<all_urls>'],
-  main() {
-    console.log('Virtual Try-On content script loaded on:', window.location.href);
+import { ALLOWED_SHOPPING_SITES } from '../constants';
+import type { 
+  GetImageInfoRequest, 
+  GetImageInfoResponse, 
+  ImageInfo, 
+  ContentMessage 
+} from '../types/messages';
+import { getImageContext, findImageElement } from '../utils/domExtract';
+import { logger } from '../utils/logger';
 
-    // 監聽來自 background script 的訊息
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log('Content script received message:', message);
+export default defineContentScript({
+  matches: ALLOWED_SHOPPING_SITES,
+  main() {
+    // Early return if not on allowed sites (additional safety check)
+    const currentUrl = window.location.href;
+    const isAllowedSite = ALLOWED_SHOPPING_SITES.some(pattern => {
+      const regex = new RegExp(pattern.replace(/\*/g, '.*'));
+      return regex.test(currentUrl);
+    });
+    
+    if (!isAllowedSite) {
+      logger.content.debug('Not on allowed site, exiting', { url: currentUrl });
+      return;
+    }
+    
+    logger.content.info('Content script loaded', { url: currentUrl });
+
+    // Listen for messages from background script
+    chrome.runtime.onMessage.addListener((message: ContentMessage, sender, sendResponse) => {
+      logger.content.debug('Received message', { type: message.type });
 
       switch (message.type) {
         case 'GET_IMAGE_INFO':
-          handleImageInfoRequest(message, sendResponse);
-          return true; // 保持訊息通道開啟
+          handleImageInfoRequest(message as GetImageInfoRequest, sendResponse);
+          return true; // Keep message channel open
 
         default:
-          console.log('Unknown message type in content script:', message.type);
+          logger.content.warn('Unknown message type', { type: message.type });
       }
     });
 
-    // 處理圖片資訊請求
-    function handleImageInfoRequest(message: any, sendResponse: (response: any) => void) {
+    // Handle image info request
+    function handleImageInfoRequest(
+      message: GetImageInfoRequest, 
+      sendResponse: (response: GetImageInfoResponse) => void
+    ) {
       try {
         const { imageUrl, pageUrl } = message;
         
-        // 尋找對應的圖片元素
-        const images = document.querySelectorAll('img');
-        let targetImage: HTMLImageElement | null = null;
-        
-        for (const img of images) {
-          if (img.src === imageUrl || img.currentSrc === imageUrl) {
-            targetImage = img;
-            break;
-          }
-        }
+        // Find corresponding image element with performance limit
+        const targetImage = findImageElement(imageUrl);
 
-        // 收集圖片相關資訊
-        const imageInfo = {
+        // Collect image information
+        const imageInfo: ImageInfo = {
           url: imageUrl,
           pageUrl: pageUrl || window.location.href,
           pageTitle: document.title,
@@ -51,11 +68,14 @@ export default defineContentScript({
           timestamp: Date.now()
         };
 
-        console.log('Image info collected:', imageInfo);
+        logger.content.debug('Image info collected', { 
+          hasElement: !!targetImage, 
+          hasContext: !!imageInfo.context 
+        });
         sendResponse({ success: true, imageInfo });
         
       } catch (error) {
-        console.error('Error collecting image info:', error);
+        logger.content.error('Error collecting image info', error);
         sendResponse({ 
           success: false, 
           error: error instanceof Error ? error.message : 'Unknown error'
@@ -63,93 +83,9 @@ export default defineContentScript({
       }
     }
 
-    // 獲取圖片的上下文資訊
-    function getImageContext(imgElement: HTMLImageElement | null): any {
-      if (!imgElement) return null;
-
-      try {
-        const parent = imgElement.parentElement;
-        const context = {
-          parentTag: parent?.tagName?.toLowerCase(),
-          parentClass: parent?.className,
-          parentId: parent?.id,
-          siblingImages: 0,
-          nearbyText: '',
-          productInfo: extractProductInfo(imgElement)
-        };
-
-        // 計算同層的圖片數量
-        if (parent) {
-          context.siblingImages = parent.querySelectorAll('img').length;
-          
-          // 嘗試獲取附近的文字內容
-          const textNodes = getTextContent(parent, 100);
-          context.nearbyText = textNodes.slice(0, 200); // 限制文字長度
-        }
-
-        return context;
-      } catch (error) {
-        console.error('Error getting image context:', error);
-        return null;
-      }
-    }
-
-    // 嘗試提取商品資訊
-    function extractProductInfo(imgElement: HTMLImageElement): any {
-      const productInfo: any = {};
-      
-      // 檢查常見的電商網站資訊
-      const parent = imgElement.closest('[data-product], .product, .item, [itemtype*="Product"]');
-      
-      if (parent) {
-        // 尋找價格資訊
-        const priceElement = parent.querySelector('[class*="price"], [data-price], .price');
-        if (priceElement) {
-          productInfo.price = priceElement.textContent?.trim();
-        }
-        
-        // 尋找商品名稱
-        const titleElement = parent.querySelector('h1, h2, h3, [class*="title"], [class*="name"]');
-        if (titleElement) {
-          productInfo.title = titleElement.textContent?.trim();
-        }
-        
-        // 尋找品牌資訊
-        const brandElement = parent.querySelector('[class*="brand"], [data-brand]');
-        if (brandElement) {
-          productInfo.brand = brandElement.textContent?.trim();
-        }
-      }
-      
-      return Object.keys(productInfo).length > 0 ? productInfo : null;
-    }
-
-    // 獲取元素的文字內容
-    function getTextContent(element: Element, maxLength: number = 100): string {
-      const walker = document.createTreeWalker(
-        element,
-        NodeFilter.SHOW_TEXT,
-        null
-      );
-      
-      let text = '';
-      let node;
-      
-      while (node = walker.nextNode()) {
-        const nodeText = node.textContent?.trim();
-        if (nodeText && nodeText.length > 0) {
-          text += nodeText + ' ';
-          if (text.length > maxLength) break;
-        }
-      }
-      
-      return text.trim();
-    }
-
-    // 可選：高亮顯示可試穿的圖片（未來功能）
+    // Optional: Highlight try-on images (future feature)
     function highlightTryOnImages() {
-      // 這個功能暫時保留，可以在未來添加圖片標記
-      console.log('Image highlighting feature ready for future implementation');
+      logger.content.debug('Image highlighting feature ready for future implementation');
     }
   },
 });

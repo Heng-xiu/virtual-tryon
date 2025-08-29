@@ -9,8 +9,15 @@ export interface Photo {
 }
 
 export interface PhotoStorage {
+  version: number;
   photos: Photo[];
   defaultPhotoId?: string;
+}
+
+export interface StorageUsage {
+  used: number;
+  quota: number;
+  percentage: number;
 }
 
 export interface UploadedFile {

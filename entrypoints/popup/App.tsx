@@ -1,10 +1,11 @@
 import { useState, useCallback } from 'react';
 import PhotoUploader from '../../components/PhotoUploader';
 import PhotoGallery from '../../components/PhotoGallery';
+import Settings from '../../components/Settings';
 import type { Photo } from '../../types/photo';
 import './App.css';
 
-type TabType = 'upload' | 'gallery';
+type TabType = 'upload' | 'gallery' | 'settings';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('upload');
@@ -63,6 +64,16 @@ function App() {
           >
             照片管理
           </button>
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`flex-1 py-3 px-4 text-sm font-medium ${
+              activeTab === 'settings'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            設定
+          </button>
         </div>
 
         {/* Message */}
@@ -78,17 +89,19 @@ function App() {
 
         {/* Content */}
         <div className="p-6">
-          {activeTab === 'upload' ? (
+          {activeTab === 'upload' && (
             <PhotoUploader
               onUploadSuccess={handleUploadSuccess}
               onUploadError={handleUploadError}
             />
-          ) : (
+          )}
+          {activeTab === 'gallery' && (
             <PhotoGallery
               key={refreshGallery}
               onRefresh={handleGalleryRefresh}
             />
           )}
+          {activeTab === 'settings' && <Settings />}
         </div>
       </div>
     </div>
