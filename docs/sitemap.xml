@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+    <!-- Homepage -->
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Main pages -->
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/index.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/privacy.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/terms.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/support.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/faq.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- 404 page (usually not included in sitemap, but can be useful for testing) -->
+    <url>
+        <loc>https://yourusername.github.io/virtual-tryon-extension/404.html</loc>
+        <lastmod>2025-01-29</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.1</priority>
+    </url>
+    
+</urlset>
+
+<!--
+    Instructions for updating this sitemap:
+    
+    1. Replace 'yourusername' with your actual GitHub username
+    2. Replace 'virtual-tryon-extension' with your actual repository name
+    3. Update lastmod dates when you make significant changes to pages
+    4. Adjust changefreq based on how often you update each page:
+       - daily: For pages that change daily
+       - weekly: For pages that change weekly
+       - monthly: For pages that change monthly
+       - yearly: For pages that rarely change
+    
+    5. Priority values (0.0 to 1.0):
+       - 1.0: Most important pages (homepage)
+       - 0.9: Very important pages (main content)
+       - 0.8: Important pages (policies, legal)
+       - 0.5: Standard pages
+       - 0.1: Low priority pages (404, etc.)
+    
+    6. After making changes, you can submit this sitemap to:
+       - Google Search Console
+       - Bing Webmaster Tools
+       - Other search engines as needed
+       
+    7. The sitemap will be automatically discoverable via robots.txt
+-->

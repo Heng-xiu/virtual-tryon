@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | Virtual Try-On</title>
+    <meta name="description" content="Frequently asked questions about Virtual Try-On Chrome extension. Get answers to common questions about installation, usage, and features.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <style>
+        .faq-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .faq-search {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .faq-search input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .faq-search input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+        }
+        
+        .faq-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .category-filter {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .category-filter:hover,
+        .category-filter.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .faq-section {
+            margin-bottom: 48px;
+        }
+        
+        .faq-section h2 {
+            color: #212529;
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .faq-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .faq-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #212529;
+            user-select: none;
+        }
+        
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+        
+        .faq-toggle {
+            font-size: 18px;
+            transition: transform 0.2s ease;
+        }
+        
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.open .faq-answer {
+            padding: 0 20px 20px 20px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .faq-answer ul {
+            color: #666;
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .faq-answer code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 14px;
+        }
+        
+        .back-to-home {
+            margin-bottom: 20px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            display: none;
+        }
+        
+        .contact-help {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="assets/images/logo.png" alt="Virtual Try-On Logo" class="logo">
+                <span class="brand-name">Virtual Try-On</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="support.html" class="nav-link">Support</a>
+                <a href="privacy.html" class="nav-link">Privacy</a>
+                <a href="terms.html" class="nav-link">Terms</a>
+            </div>
+            <a href="#" class="btn btn-primary">Add to Chrome</a>
+        </nav>
+    </header>
+
+    <main style="margin-top: 60px;">
+        <div class="faq-content">
+            <div class="back-to-home">
+                <a href="index.html" class="btn btn-outline">← Back to Home</a>
+            </div>
+            
+            <h1 style="text-align: center; margin-bottom: 16px; color: #212529;">Frequently Asked Questions</h1>
+            <p style="text-align: center; color: #666; margin-bottom: 40px;">Find answers to common questions about Virtual Try-On</p>
+
+            <!-- Search -->
+            <div class="faq-search">
+                <input type="text" id="faqSearch" placeholder="🔍 Search FAQs..." />
+            </div>
+
+            <!-- Category Filters -->
+            <div class="faq-categories">
+                <div class="category-filter active" data-category="all">All</div>
+                <div class="category-filter" data-category="installation">Installation</div>
+                <div class="category-filter" data-category="usage">Usage</div>
+                <div class="category-filter" data-category="api">API & Setup</div>
+                <div class="category-filter" data-category="privacy">Privacy</div>
+                <div class="category-filter" data-category="troubleshooting">Troubleshooting</div>
+            </div>
+
+            <!-- Installation FAQs -->
+            <section class="faq-section" data-category="installation">
+                <h2>Installation & Setup</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I install the Virtual Try-On extension?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Installing the extension is simple:</p>
+                        <ul>
+                            <li>Visit the Chrome Web Store</li>
+                            <li>Click "Add to Chrome" on the Virtual Try-On extension page</li>
+                            <li>Confirm by clicking "Add extension" in the popup</li>
+                            <li>The extension icon will appear in your browser toolbar</li>
+                        </ul>
+                        <p>Once installed, you can access the extension by clicking its icon or right-clicking on clothing images.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What permissions does the extension require?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The extension requires minimal permissions:</p>
+                        <ul>
+                            <li><strong>contextMenus:</strong> To add the "Try On" option when you right-click on images</li>
+                            <li><strong>storage:</strong> To save your photos locally on your device</li>
+                            <li><strong>activeTab:</strong> To interact with the current webpage when you use the try-on feature</li>
+                        </ul>
+                        <p>We only request permissions that are essential for the extension to function. Your data never leaves your device unless you connect to a third-party AI service.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is the extension compatible with my browser?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The Virtual Try-On extension is compatible with:</p>
+                        <ul>
+                            <li>Google Chrome (version 88 and above)</li>
+                            <li>Microsoft Edge (Chromium-based)</li>
+                            <li>Brave Browser</li>
+                            <li>Other Chromium-based browsers</li>
+                        </ul>
+                        <p>Note: The extension is not compatible with Firefox or Safari at this time.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Usage FAQs -->
+            <section class="faq-section" data-category="usage">
+                <h2>Usage & Features</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I upload my photo for try-on?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To upload your photo:</p>
+                        <ul>
+                            <li>Click the Virtual Try-On extension icon in your browser toolbar</li>
+                            <li>Click "Upload Photo" or drag and drop an image file</li>
+                            <li>Supported formats: JPG, PNG, WebP (max 10MB)</li>
+                            <li>For best results, use a clear, well-lit photo of yourself</li>
+                        </ul>
+                        <p>Your photo is stored locally on your device and can be managed through the extension settings.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I try on clothing items?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Once you've uploaded your photo:</p>
+                        <ul>
+                            <li>Navigate to any online clothing store</li>
+                            <li>Right-click on a clothing item image</li>
+                            <li>Select "Try On with Virtual Try-On" from the context menu</li>
+                            <li>Wait a few seconds for the AI to generate your try-on result</li>
+                        </ul>
+                        <p>The try-on result will appear in a popup window showing how the item might look on you.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Which websites does the extension work with?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The extension works with most major e-commerce websites including:</p>
+                        <ul>
+                            <li>Amazon, eBay, Etsy</li>
+                            <li>Fashion retailers like Zara, H&M, ASOS</li>
+                            <li>Department stores like Nordstrom, Macy's</li>
+                            <li>Any website with clothing images</li>
+                        </ul>
+                        <p>The extension can detect clothing images on most websites. If you encounter issues with a specific site, please let us know.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How accurate are the try-on results?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Try-on results are AI-generated approximations and should be considered as visual guides rather than exact representations. Accuracy depends on:</p>
+                        <ul>
+                            <li>Quality of your uploaded photo</li>
+                            <li>Clarity and angle of the clothing item</li>
+                            <li>Complexity of the garment</li>
+                            <li>AI model capabilities</li>
+                        </ul>
+                        <p>Results are best for tops, dresses, and jackets. Complex patterns or very detailed items may not render perfectly.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API & Setup FAQs -->
+            <section class="faq-section" data-category="api">
+                <h2>API & Configuration</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do I need an API key to use the extension?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, you need to provide your own API key from a supported AI service provider. This approach:</p>
+                        <ul>
+                            <li>Keeps costs transparent and under your control</li>
+                            <li>Ensures your data only goes to services you trust</li>
+                            <li>Allows you to choose your preferred AI provider</li>
+                            <li>Eliminates the need for subscription fees</li>
+                        </ul>
+                        <p>Supported providers include OpenAI, OpenRouter, and other compatible services.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I get an API key?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To get an API key:</p>
+                        <ul>
+                            <li><strong>OpenAI:</strong> Visit platform.openai.com, create an account, and generate an API key</li>
+                            <li><strong>OpenRouter:</strong> Visit openrouter.ai, sign up, and create an API key</li>
+                            <li>Add credits to your chosen provider's account</li>
+                            <li>Copy the API key and paste it into the extension settings</li>
+                        </ul>
+                        <p>Most providers offer free credits for new users to get started.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How much does it cost to use the extension?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The extension itself is free. You only pay for:</p>
+                        <ul>
+                            <li>API usage from your chosen AI provider</li>
+                            <li>Typical cost: $0.01-$0.10 per try-on generation</li>
+                            <li>Exact pricing depends on the AI model and provider you choose</li>
+                        </ul>
+                        <p>This pay-per-use model means you only pay for what you actually use, with no subscription fees.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is my API key secure?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, your API key security is prioritized:</p>
+                        <ul>
+                            <li>API keys are stored locally in encrypted browser storage</li>
+                            <li>Keys are never transmitted to our servers</li>
+                            <li>Only sent directly to your chosen AI provider</li>
+                            <li>You can delete or change your API key anytime</li>
+                        </ul>
+                        <p>We recommend regularly rotating your API keys and monitoring usage through your provider's dashboard.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Privacy FAQs -->
+            <section class="faq-section" data-category="privacy">
+                <h2>Privacy & Data</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Where are my photos stored?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Your photos are stored locally on your device:</p>
+                        <ul>
+                            <li>Stored in your browser's local extension storage</li>
+                            <li>Never uploaded to our servers</li>
+                            <li>Only transmitted to AI providers when you generate try-ons</li>
+                            <li>You can delete photos anytime through extension settings</li>
+                        </ul>
+                        <p>This local-first approach ensures maximum privacy and control over your personal images.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What data is sent to AI providers?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>When you generate a try-on, only these items are sent:</p>
+                        <ul>
+                            <li>Your uploaded photo (temporarily, for processing)</li>
+                            <li>The clothing item image you selected</li>
+                            <li>Basic processing parameters</li>
+                        </ul>
+                        <p>No personal information, browsing history, or other data is transmitted. The AI provider processes your request and returns the try-on result.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I delete my data?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, you have full control over your data:</p>
+                        <ul>
+                            <li>Delete individual photos through the extension popup</li>
+                            <li>Clear all stored data in extension settings</li>
+                            <li>Uninstall the extension to remove all local data</li>
+                            <li>Contact AI providers directly about their data retention policies</li>
+                        </ul>
+                        <p>Since data is stored locally, deletion is immediate and permanent.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Troubleshooting FAQs -->
+            <section class="faq-section" data-category="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>The extension isn't working on a specific website</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If the extension doesn't work on a particular website:</p>
+                        <ul>
+                            <li>Refresh the page and try again</li>
+                            <li>Make sure you're right-clicking directly on the clothing image</li>
+                            <li>Check if the website blocks extensions or uses heavy security measures</li>
+                            <li>Try disabling other extensions temporarily</li>
+                        </ul>
+                        <p>If problems persist, please report the website URL to our support team.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Try-on generation is failing or slow</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If try-on generation isn't working:</p>
+                        <ul>
+                            <li>Check your API key is valid and has sufficient credits</li>
+                            <li>Verify your internet connection is stable</li>
+                            <li>Try with a different, clearer clothing image</li>
+                            <li>Check if your AI provider is experiencing downtime</li>
+                        </ul>
+                        <p>Generation typically takes 5-15 seconds. Longer times may indicate API or network issues.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>The extension popup won't open</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If the extension popup isn't appearing:</p>
+                        <ul>
+                            <li>Make sure the extension is enabled in <code>chrome://extensions/</code></li>
+                            <li>Try restarting your browser</li>
+                            <li>Check if the extension icon is visible in the toolbar</li>
+                            <li>Right-click the extension icon and select "Options" or "Manage"</li>
+                        </ul>
+                        <p>If these steps don't help, try reinstalling the extension.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="noResults">
+                <h3>No results found</h3>
+                <p>Try different search terms or browse the categories above.</p>
+            </div>
+
+            <!-- Contact Help -->
+            <div class="contact-help">
+                <h3>Still need help?</h3>
+                <p>Can't find what you're looking for? We're here to help!</p>
+                <div style="margin-top: 16px;">
+                    <a href="support.html" class="btn btn-primary" style="margin-right: 12px;">Contact Support</a>
+                    <a href="#" class="btn btn-outline">Report Bug</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="assets/images/logo.png" alt="Virtual Try-On Logo" class="footer-logo">
+                    <span class="footer-brand-name">Virtual Try-On</span>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="support.html">Support</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Virtual Try-On. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // FAQ functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            const searchInput = document.getElementById('faqSearch');
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            const faqSections = document.querySelectorAll('.faq-section');
+            const noResults = document.getElementById('noResults');
+
+            // FAQ toggle functionality
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const isOpen = faqItem.classList.contains('open');
+                    
+                    // Close all other FAQ items
+                    faqQuestions.forEach(q => {
+                        q.parentElement.classList.remove('open');
+                    });
+                    
+                    // Toggle current item
+                    if (!isOpen) {
+                        faqItem.classList.add('open');
+                    }
+                });
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasResults = false;
+                
+                faqSections.forEach(section => {
+                    const faqItems = section.querySelectorAll('.faq-item');
+                    let sectionHasResults = false;
+                    
+                    faqItems.forEach(item => {
+                        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                        
+                        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                            item.style.display = 'block';
+                            sectionHasResults = true;
+                            hasResults = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show/hide section based on whether it has matching items
+                    if (searchTerm === '') {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = sectionHasResults ? 'block' : 'none';
+                    }
+                });
+                
+                // Show/hide no results message
+                noResults.style.display = (searchTerm !== '' && !hasResults) ? 'block' : 'none';
+            });
+
+            // Category filter functionality
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    // Update active filter
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Clear search
+                    searchInput.value = '';
+                    
+                    // Show/hide sections based on category
+                    faqSections.forEach(section => {
+                        const sectionCategory = section.dataset.category;
+                        const faqItems = section.querySelectorAll('.faq-item');
+                        
+                        if (category === 'all' || category === sectionCategory) {
+                            section.style.display = 'block';
+                            faqItems.forEach(item => {
+                                item.style.display = 'block';
+                            });
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                    
+                    // Hide no results message
+                    noResults.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

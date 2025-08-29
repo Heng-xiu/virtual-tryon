@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | Virtual Try-On</title>
+    <meta name="description" content="The page you're looking for doesn't exist. Return to Virtual Try-On homepage.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <style>
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+        }
+        
+        .error-content {
+            text-align: center;
+            max-width: 600px;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 20px;
+            line-height: 1;
+            text-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+        
+        .error-title {
+            font-size: 2rem;
+            color: #212529;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .suggestions {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .suggestions h3 {
+            color: #495057;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+        }
+        
+        .suggestions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .suggestions li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .suggestions li:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestions a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .suggestions a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        
+        .search-box {
+            margin-top: 24px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .search-box button:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .error-content {
+                padding: 40px 24px;
+            }
+            
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .error-message {
+                font-size: 16px;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-content">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-message">Sorry, the page you're looking for doesn't exist or may have been moved. Let's get you back on track!</p>
+            
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary btn-large">← Go Home</a>
+                <a href="support.html" class="btn btn-outline btn-large">Get Help</a>
+            </div>
+            
+            <div class="suggestions">
+                <h3>Looking for something specific?</h3>
+                <ul>
+                    <li><a href="index.html">🏠 Homepage - Learn about Virtual Try-On</a></li>
+                    <li><a href="faq.html">❓ FAQ - Frequently asked questions</a></li>
+                    <li><a href="support.html">🛠️ Support - Get help and contact us</a></li>
+                    <li><a href="privacy.html">🔒 Privacy Policy - How we protect your data</a></li>
+                    <li><a href="terms.html">📋 Terms of Service - Usage terms</a></li>
+                </ul>
+                
+                <div class="search-box">
+                    <input type="text" id="siteSearch" placeholder="Search our website...">
+                    <button type="button" onclick="performSearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect functionality (optional)
+        function autoRedirect() {
+            // Get the current URL
+            const currentURL = window.location.pathname;
+            
+            // Common redirect patterns
+            const redirectMap = {
+                '/home': '/index.html',
+                '/help': '/support.html',
+                '/contact': '/support.html',
+                '/about': '/index.html',
+                '/install': '/index.html#install',
+                '/features': '/index.html#features',
+                '/how-it-works': '/index.html#how',
+                '/download': '/index.html#install'
+            };
+            
+            // Check if there's a redirect for this URL
+            if (redirectMap[currentURL]) {
+                setTimeout(() => {
+                    window.location.href = redirectMap[currentURL];
+                }, 3000); // Redirect after 3 seconds
+                
+                // Show redirect message
+                const errorMessage = document.querySelector('.error-message');
+                errorMessage.innerHTML += '<br><br><strong>Redirecting you in 3 seconds...</strong>';
+            }
+        }
+
+        // Simple site search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('siteSearch').value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            // Simple keyword-based routing
+            const searchRoutes = {
+                'install': 'index.html#install',
+                'installation': 'index.html#install',
+                'download': 'index.html#install',
+                'chrome': 'index.html#install',
+                'help': 'support.html',
+                'support': 'support.html',
+                'contact': 'support.html',
+                'bug': 'support.html',
+                'issue': 'support.html',
+                'faq': 'faq.html',
+                'question': 'faq.html',
+                'privacy': 'privacy.html',
+                'data': 'privacy.html',
+                'security': 'privacy.html',
+                'terms': 'terms.html',
+                'service': 'terms.html',
+                'legal': 'terms.html',
+                'features': 'index.html#features',
+                'how': 'index.html#how',
+                'works': 'index.html#how',
+                'api': 'faq.html',
+                'key': 'faq.html',
+                'setup': 'faq.html',
+                'troubleshoot': 'support.html',
+                'error': 'support.html',
+                'not working': 'support.html'
+            };
+            
+            // Find matching route
+            let foundRoute = null;
+            for (const [keyword, route] of Object.entries(searchRoutes)) {
+                if (searchTerm.includes(keyword)) {
+                    foundRoute = route;
+                    break;
+                }
+            }
+            
+            if (foundRoute) {
+                window.location.href = foundRoute;
+            } else {
+                // Default to support page for unmatched searches
+                alert('No specific page found for "' + searchTerm + '". Redirecting to support page where you can get help.');
+                window.location.href = 'support.html';
+            }
+        }
+
+        // Handle Enter key in search box
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('siteSearch');
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Initialize auto-redirect check
+            autoRedirect();
+            
+            // Add some interactive effects
+            const errorCode = document.querySelector('.error-code');
+            errorCode.addEventListener('mouseover', function() {
+                this.style.transform = 'rotate(-5deg) scale(1.1)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            errorCode.addEventListener('mouseout', function() {
+                this.style.transform = 'rotate(0deg) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

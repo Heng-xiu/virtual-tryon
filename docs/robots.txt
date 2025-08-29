@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://yourusername.github.io/virtual-tryon-extension/sitemap.xml
+
+# Crawl-delay (optional - adds a small delay between requests)
+Crawl-delay: 1
+
+# Allow indexing of all main pages
+Allow: /index.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /support.html
+Allow: /faq.html
+Allow: /404.html
+
+# Allow CSS, JS, and image assets
+Allow: /assets/
+
+# Disallow any potential admin or config files
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /config/
+
+# Comments for reference
+# This robots.txt allows all search engine crawlers to index the entire site
+# Update the sitemap URL to match your actual GitHub Pages URL
+# Replace 'yourusername' with your actual GitHub username
+# Replace 'virtual-tryon-extension' with your actual repository name
