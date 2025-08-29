@@ -14,130 +14,62 @@
     
     <style>
         .support-content {
-            max-width: 1000px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 40px 20px;
+            text-align: center;
         }
         
-        .support-section {
+        .support-content h1 {
+            color: #212529;
+            margin-bottom: 16px;
+        }
+        
+        .support-content .subtitle {
+            color: #666;
             margin-bottom: 48px;
+            font-size: 18px;
         }
         
-        .support-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        .support-card {
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-        
-        .support-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-        
-        .support-card h3 {
-            color: #212529;
-            margin-bottom: 12px;
-        }
-        
-        .support-card p {
-            color: #666;
-            margin-bottom: 16px;
-        }
-        
-        .troubleshooting-list {
+        .github-info {
             background: #f8f9fa;
-            padding: 24px;
-            border-radius: 8px;
-            margin: 24px 0;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 1px solid #e9ecef;
         }
         
-        .troubleshooting-list h4 {
-            color: #495057;
-            margin-bottom: 16px;
-        }
-        
-        .troubleshooting-item {
-            margin-bottom: 16px;
-            padding: 12px;
-            background: white;
-            border-radius: 6px;
-            border-left: 4px solid #007bff;
-        }
-        
-        .troubleshooting-item h5 {
+        .github-info h2 {
             color: #212529;
-            margin-bottom: 8px;
-        }
-        
-        .troubleshooting-item p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .contact-form {
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
             margin-bottom: 16px;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 4px;
-            color: #495057;
+        .github-info p {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        
+        .github-button {
+            display: inline-block;
+            background: #24292e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
             font-weight: 500;
+            transition: background 0.2s ease;
         }
         
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border-color 0.2s ease;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
+        .github-button:hover {
+            background: #1b1f23;
+            color: white;
+            text-decoration: none;
         }
         
         .back-to-home {
             margin-bottom: 20px;
-        }
-        
-        .response-time {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 16px;
-            font-size: 14px;
+            text-align: left;
         }
     </style>
 </head>
@@ -164,198 +96,27 @@
                 <a href="index.html" class="btn btn-outline">← Back to Home</a>
             </div>
             
-            <h1 style="text-align: center; margin-bottom: 16px; color: #212529;">Support Center</h1>
-            <p style="text-align: center; color: #666; margin-bottom: 48px;">Get help with Virtual Try-On Chrome extension</p>
+            <h1>Need Help?</h1>
+            <p class="subtitle">Get support for Virtual Try-On Chrome extension</p>
 
-            <!-- Quick Help Options -->
-            <section class="support-section">
-                <h2 style="color: #212529; margin-bottom: 24px;">Quick Help</h2>
-                <div class="support-grid">
-                    <div class="support-card">
-                        <h3>📚 Frequently Asked Questions</h3>
-                        <p>Find answers to common questions about installation, usage, and troubleshooting.</p>
-                        <a href="faq.html" class="btn btn-primary">View FAQ</a>
-                    </div>
-                    
-                    <div class="support-card">
-                        <h3>🐛 Report a Bug</h3>
-                        <p>Found an issue? Report it on our GitHub repository for the fastest resolution.</p>
-                        <a href="#" target="_blank" rel="noopener" class="btn btn-primary">Open GitHub Issue</a>
-                    </div>
-                    
-                    <div class="support-card">
-                        <h3>💡 Feature Request</h3>
-                        <p>Have an idea for a new feature? We'd love to hear your suggestions!</p>
-                        <a href="#" target="_blank" rel="noopener" class="btn btn-primary">Request Feature</a>
-                    </div>
-                </div>
-            </section>
+            <div class="github-info">
+                <h2>Send us a Message</h2>
+                <p>For the fastest support, please report issues, ask questions, or request features on our GitHub repository. This helps us track and resolve issues more efficiently.</p>
+                <a href="#" class="github-button" target="_blank" rel="noopener">Open GitHub Issue</a>
+            </div>
 
-            <!-- Common Issues -->
-            <section class="support-section">
-                <h2 style="color: #212529; margin-bottom: 24px;">Common Issues</h2>
-                
-                <div class="troubleshooting-list">
-                    <h4>Installation & Setup</h4>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Extension not appearing in Chrome</h5>
-                        <p><strong>Solution:</strong> Make sure you've enabled the extension in Chrome Extensions (chrome://extensions/). Look for the Virtual Try-On extension and ensure the toggle is switched on.</p>
-                    </div>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Right-click menu not showing "Try On" option</h5>
-                        <p><strong>Solution:</strong> The try-on option only appears when right-clicking on images. Make sure you're right-clicking directly on a clothing item image, not on text or other page elements.</p>
-                    </div>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Can't upload photos</h5>
-                        <p><strong>Solution:</strong> Check that the image file is in a supported format (JPG, PNG, WebP) and under 10MB in size. Also ensure you've granted the necessary permissions to the extension.</p>
-                    </div>
-                </div>
-
-                <div class="troubleshooting-list">
-                    <h4>API & Configuration</h4>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>API key not working</h5>
-                        <p><strong>Solution:</strong> Verify that your API key is correctly entered without extra spaces. Make sure the key has sufficient credits and the correct permissions for the AI service you're using.</p>
-                    </div>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Try-on generation fails</h5>
-                        <p><strong>Solution:</strong> This could be due to API limits, network connectivity, or image quality issues. Try with a different image or check your API service status.</p>
-                    </div>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Slow generation speed</h5>
-                        <p><strong>Solution:</strong> Generation speed depends on your chosen AI provider and current server load. Consider upgrading your API plan or trying during off-peak hours.</p>
-                    </div>
-                </div>
-
-                <div class="troubleshooting-list">
-                    <h4>Privacy & Data</h4>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>How to delete stored photos</h5>
-                        <p><strong>Solution:</strong> Open the extension popup, go to Settings, and use the "Clear Photos" button. You can also delete individual photos from the photo management section.</p>
-                    </div>
-                    
-                    <div class="troubleshooting-item">
-                        <h5>Extension permissions concerns</h5>
-                        <p><strong>Solution:</strong> We only request necessary permissions: contextMenus (right-click menu), storage (local photo storage), and activeTab (interact with current page). No data is sent to our servers.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Contact Support -->
-            <section class="support-section">
-                <h2 style="color: #212529; margin-bottom: 24px;">Contact Support</h2>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
-                    <div>
-                        <h3 style="color: #495057; margin-bottom: 16px;">Get in Touch</h3>
-                        <p style="color: #666; margin-bottom: 24px;">Can't find the answer you're looking for? Send us a message and we'll get back to you as soon as possible.</p>
-                        
-                        <div style="margin-bottom: 24px;">
-                            <h4 style="color: #495057; margin-bottom: 8px;">Response Times</h4>
-                            <ul style="color: #666; padding-left: 20px;">
-                                <li><strong>General inquiries:</strong> Within 24-48 hours</li>
-                                <li><strong>Technical issues:</strong> Within 12-24 hours</li>
-                                <li><strong>Bug reports:</strong> Within 6-12 hours</li>
-                                <li><strong>Security issues:</strong> Within 2-6 hours</li>
-                            </ul>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 16px; border-radius: 6px;">
-                            <h4 style="color: #495057; margin-bottom: 8px;">Before Contacting Support</h4>
-                            <ul style="color: #666; padding-left: 20px; margin: 0;">
-                                <li>Check the FAQ and troubleshooting sections above</li>
-                                <li>Try disabling other extensions temporarily</li>
-                                <li>Note your Chrome version and operating system</li>
-                                <li>Include any error messages or screenshots</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-form">
-                        <h3 style="margin-bottom: 16px; color: #495057;">Send us a Message</h3>
-                        
-                        <form id="supportForm">
-                            <div class="form-group">
-                                <label for="name">Name *</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="category">Issue Category</label>
-                                <select id="category" name="category">
-                                    <option value="general">General Question</option>
-                                    <option value="technical">Technical Issue</option>
-                                    <option value="bug">Bug Report</option>
-                                    <option value="feature">Feature Request</option>
-                                    <option value="privacy">Privacy Concern</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="subject">Subject *</label>
-                                <input type="text" id="subject" name="subject" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="message">Message *</label>
-                                <textarea id="message" name="message" placeholder="Please describe your issue in detail. Include steps to reproduce if reporting a bug." required></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="system">System Information (Optional)</label>
-                                <textarea id="system" name="system" placeholder="Chrome version, Operating system, Extension version, etc."></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
-                            
-                            <div class="response-time">
-                                <strong>📧 Email Support:</strong> You can also email us directly at <a href="mailto:support@example.com">support@example.com</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Community Resources -->
-            <section class="support-section">
-                <h2 style="color: #212529; margin-bottom: 24px;">Community & Resources</h2>
-                
-                <div class="support-grid">
-                    <div class="support-card">
-                        <h3>📖 Documentation</h3>
-                        <p>Comprehensive guides and documentation for developers and advanced users.</p>
-                        <a href="#" class="btn btn-outline">View Docs</a>
-                    </div>
-                    
-                    <div class="support-card">
-                        <h3>🔄 Changelog</h3>
-                        <p>Stay updated with the latest features, improvements, and bug fixes.</p>
-                        <a href="#" class="btn btn-outline">View Changelog</a>
-                    </div>
-                    
-                    <div class="support-card">
-                        <h3>💬 Community Discussion</h3>
-                        <p>Join discussions, share tips, and connect with other users.</p>
-                        <a href="#" target="_blank" rel="noopener" class="btn btn-outline">Join Community</a>
-                    </div>
-                </div>
-            </section>
+            <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+                <h3 style="color: #495057; margin-bottom: 16px;">Quick Links:</h3>
+                <ul style="color: #666; line-height: 2;">
+                    <li><a href="faq.html" style="color: #007bff; text-decoration: none;">📚 FAQ</a> - Common questions and answers</li>
+                    <li><a href="privacy.html" style="color: #007bff; text-decoration: none;">🔒 Privacy Policy</a> - How we handle your data</li>
+                    <li><a href="terms.html" style="color: #007bff; text-decoration: none;">📋 Terms of Service</a> - Usage terms</li>
+                </ul>
+            </div>
         </div>
     </main>
 
+        <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -364,10 +125,11 @@
                     <span class="footer-brand-name">Virtual Try-On</span>
                 </div>
                 <div class="footer-links">
-                    <a href="index.html">Home</a>
                     <a href="privacy.html">Privacy</a>
                     <a href="terms.html">Terms</a>
+                    <a href="support.html">Support</a>
                     <a href="faq.html">FAQ</a>
+                    <a href="#">GitHub</a>
                 </div>
                 <div class="footer-copyright">
                     <p>&copy; 2025 Virtual Try-On. All rights reserved.</p>
@@ -377,21 +139,5 @@
     </footer>
 
     <script src="assets/js/main.js"></script>
-    <script>
-        // Support form handling
-        document.getElementById('supportForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // In a real implementation, you would send this to your backend
-            alert('Thank you for your message! We\'ll get back to you soon.\n\nFor now, please email us directly at support@example.com');
-            
-            // Reset form
-            this.reset();
-        });
-    </script>
 </body>
 </html>

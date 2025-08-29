@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://yourusername.github.io/virtual-tryon-extension/sitemap.xml
+Sitemap: https://Heng-xiu.github.io/virtual-tryon/sitemap.xml
 
 # Crawl-delay (optional - adds a small delay between requests)
 Crawl-delay: 1
@@ -27,5 +27,5 @@ Disallow: /config/
 # Comments for reference
 # This robots.txt allows all search engine crawlers to index the entire site
 # Update the sitemap URL to match your actual GitHub Pages URL
-# Replace 'yourusername' with your actual GitHub username
-# Replace 'virtual-tryon-extension' with your actual repository name
+# Replace 'Heng-xiu' with your actual GitHub username
+# Replace 'virtual-tryon' with your actual repository name
